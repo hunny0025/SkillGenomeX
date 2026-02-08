@@ -1,4 +1,4 @@
-#National Talent Intelligence Engine (SkillGenome X)
+# National Talent Intelligence Engine (SkillGenome X)
 
 An AI-powered platform for national workforce intelligence, designed to identify hidden talent, predict skill gaps, and support data-driven policy decisions.
 
