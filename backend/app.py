@@ -462,6 +462,32 @@ def health():
         "system_confidence": 0.98
     })
 
+
+@app.route('/api/forecast', methods=['GET'])
+def forecast():
+    return jsonify({
+        "6_month_growth": random.randint(5, 20),
+        "emerging_domains": ["AI", "Data Science", "Cloud"],
+        "risk_trend": "Stable"
+    })
+@app.route('/api/regional-analysis', methods=['GET'])
+def regional_analysis():
+    if DF.empty:
+        return jsonify([])
+
+    results = []
+    for state in DF['state'].unique():
+        sub = DF[DF['state'] == state]
+        avg_skill = sub['skill_score'].mean()
+
+        results.append({
+            "state": state,
+            "avg_skill": round(avg_skill, 1),
+            "risk_level": "High" if avg_skill < 50 else "Moderate" if avg_skill < 70 else "Low"
+        })
+
+    return jsonify(results)
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
 
