@@ -78,20 +78,18 @@ def train_models():
                 'skill_score': np.random.randint(30, 95, 1000)
             })
 
-            globals()['DF'] = DF
-            print("Synthetic dataset created:", len(DF))
+            if not os.path.exists(DATA_FILE):
+    # create synthetic
+               DF = pd.DataFrame({...})
+                  print("Synthetic dataset created:", len(DF))
 
-        else:
-            DF = pd.read_csv(DATA_FILE)
-            print(f"AI ENGINE: Loaded {len(DF)} profiles.")
+           else:
+                DF = pd.read_csv(DATA_FILE)
+                 print(f"AI ENGINE: Loaded {len(DF)} profiles.")
 
+# clean global assignment
+globals()['DF'] = DF
 
-    globals()['DF'] = DF
-    print("Synthetic dataset created:", len(DF))
-
-
-        DF = pd.read_csv(DATA_FILE)
-        print(f"AI ENGINE: Loaded {len(DF)} profiles.")
     
         # --- DATA VALIDATION LAYER ---
         required_columns = [
@@ -527,4 +525,5 @@ def regional_analysis():
 # VERY LAST LINES
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
 
