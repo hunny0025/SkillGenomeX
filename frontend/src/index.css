@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+  @apply bg-background text-text antialiased;
+  /* Complex Government-Grade Background */
+  background-image:
+    linear-gradient(to bottom, rgba(11, 15, 26, 0.95), rgba(6, 9, 18, 0.98)),
+    url("https://images.unsplash.com/photo-1526304640152-d4619684e484?q=80&w=2000&auto=format&fit=crop"),
+    /* Tech Network */
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236C5CE7' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-blend-mode: overlay, normal;
+  background-attachment: fixed;
+  background-size: cover, cover, auto;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-panel;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-accent/30 rounded-full hover:bg-accent/60;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-700/50 rounded-full;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.glass-panel {
+  @apply bg-panel/60 backdrop-blur-md border border-gray-800 shadow-xl;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr 340px;
+  /* Wider alerts panel */
+  height: 100vh;
+  overflow: hidden;
+}
