@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-const API_URL = "https://skillgenomex.onrender.com";
 
 import Sidebar from './components/Sidebar';
 import AlertsPanel from './components/AlertsPanel';
@@ -57,10 +56,9 @@ function App() {
 
     const fetchPrediction = async () => {
         setLoading(true);
-        try {const res = await axios.post(
-  'https://skillgenomex.onrender.com/predict',
-  { signals, context }
-);
+        try {
+            const res = await axios.post('/api/predict', { signals, context });
+
 
           
             setPrediction(res.data);
@@ -149,6 +147,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
