@@ -12,6 +12,14 @@ from sklearn.model_selection import train_test_split
 
 app = Flask(__name__)
 CORS(app)
+@app.route('/')
+def home():
+    return jsonify({
+        "service": "SkillGenomeX API",
+        "status": "Running",
+        "version": "1.0"
+    })
+
 
 import traceback
 
@@ -456,3 +464,4 @@ def health():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
