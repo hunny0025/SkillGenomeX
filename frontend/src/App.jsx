@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+axios.defaults.baseURL = "https://skillgenomex.onrender.com";
+
 
 import Sidebar from './components/Sidebar';
 import AlertsPanel from './components/AlertsPanel';
@@ -208,6 +210,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
