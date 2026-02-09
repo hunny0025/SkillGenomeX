@@ -52,8 +52,11 @@ def train_models():
     try:
         print("AI ENGINE: Loading Data Foundation...")
 
-        # If CSV not found → create synthetic dataset
-        if not os.path.exists(DATA_FILE):
+        # --- Load or Create Dataset ---
+        if os.path.exists(DATA_FILE):
+            DF = pd.read_csv(DATA_FILE)
+            print(f"AI ENGINE: Loaded {len(DF)} profiles from CSV.")
+        else:
             print("No dataset found. Generating synthetic data...")
 
             states_list = ["Maharashtra", "Karnataka", "Punjab", "Bihar", "Tamil Nadu", "Gujarat"]
@@ -78,81 +81,42 @@ def train_models():
                 'skill_score': np.random.randint(30, 95, 1000)
             })
 
-            if not os.path.exists(DATA_FILE):
-    # create synthetic
-               DF = pd.DataFrame({...})
-                  print("Synthetic dataset created:", len(DF))
+            print("Synthetic dataset created:", len(DF))
 
-           else:
-                DF = pd.read_csv(DATA_FILE)
-                 print(f"AI ENGINE: Loaded {len(DF)} profiles.")
+        # Make sure global DF is updated
+        globals()['DF'] = DF
 
-# clean global assignment
-globals()['DF'] = DF
-
-    
-        # --- DATA VALIDATION LAYER ---
-        required_columns = [
-            'creation_output', 'learning_behavior', 'experience_consistency',
-            'economic_activity', 'innovation_problem_solving', 'collaboration_community',
-            'offline_capability', 'digital_presence', 'learning_hours', 'projects',
-            'state', 'digital_access', 'opportunity_level', 'skill_score', 'domain', 'area_type'
-        ]
-        
-        states_list = ["Maharashtra", "Karnataka", "Punjab", "Bihar", "Tamil Nadu", "Gujarat", "Kerala", "Uttar Pradesh"]
-        
-        # Auto-Heal Missing Columns
-        for col in required_columns:
-            if col not in DF.columns:
-                print(f"AI ENGINE: Auto-healing missing column: {col}")
-                if col == "state":
-                    DF[col] = np.random.choice(states_list, size=len(DF))
-                elif col == "digital_access":
-                    DF[col] = np.random.choice(["High", "Regular", "Limited", "Occasional"], size=len(DF))
-                elif col == "opportunity_level":
-                    DF[col] = np.random.choice(["High", "Moderate", "Low"], size=len(DF))
-                elif col == "domain":
-                    DF[col] = np.random.choice(["Technology", "Agriculture", "Business"], size=len(DF))
-                elif col == "area_type":
-                    DF[col] = np.random.choice(["Urban", "Semi-Urban", "Rural"], size=len(DF))
-                else:
-                    DF[col] = np.random.randint(20, 90, size=len(DF))
-
-        # Feature columns for ML
+        # --- Feature Columns ---
         feature_cols = [
             'creation_output', 'learning_behavior', 'experience_consistency',
             'economic_activity', 'innovation_problem_solving', 'collaboration_community',
             'offline_capability', 'digital_presence', 'learning_hours', 'projects'
         ]
-        
-        # Final safety check for feature columns
-        for col in feature_cols:
-            if col not in DF.columns:
-                DF[col] = 0
-        
+
         X = DF[feature_cols].fillna(0)
         y = DF['skill_score'].fillna(50)
-        
-        print("AI ENGINE: Training Gradient Boosting Regressor...")
-        gb = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42)
-        gb.fit(X, y)
-        score = gb.score(X, y)
-        MODEL_STATE['skill_model'] = gb
-        MODEL_STATE['training_score'] = round(score * 100, 1)
-        print(f"AI ENGINE: Skill Model Trained (R2 Accuracy: {MODEL_STATE['training_score']}%)")
 
-        # Anomaly Detection
-        print("AI ENGINE: Training Isolation Forest for Anomaly Detection...")
-        iso = IsolationForest(contamination=0.03, random_state=42)
+        # --- Train Skill Model ---
+        print("Training Gradient Boosting Model...")
+        gb = GradientBoostingRegressor(random_state=42)
+        gb.fit(X, y)
+
+        MODEL_STATE['skill_model'] = gb
+        MODEL_STATE['training_score'] = round(gb.score(X, y) * 100, 1)
+
+        # --- Train Anomaly Model ---
+        iso = IsolationForest(random_state=42)
         iso.fit(X)
         MODEL_STATE['anomaly_model'] = iso
+
         MODEL_STATE['active'] = True
-        print("AI ENGINE: Models Active.")
-        
+        print("AI ENGINE READY")
+
     except Exception as e:
-        print(f"AI ENGINE ERROR: Model training failed - {str(e)}")
-        print("Server will continue running without AI models.")
+        print("MODEL TRAINING FAILED:", e)
         MODEL_STATE['active'] = False
+
+   
 
 # Train on Startup
 train_models()
@@ -525,5 +489,6 @@ def regional_analysis():
 # VERY LAST LINES
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
 
 
