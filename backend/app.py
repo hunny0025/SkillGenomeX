@@ -494,6 +494,7 @@ def forecast():
         "emerging_domains": ["AI", "Data Science", "Cloud"],
         "risk_trend": "Stable"
     })
+
 @app.route('/api/regional-analysis', methods=['GET'])
 def regional_analysis():
     if DF.empty:
@@ -512,7 +513,7 @@ def regional_analysis():
 
     return jsonify(results)
 
+
+# VERY LAST LINES
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-
-
