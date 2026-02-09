@@ -51,10 +51,34 @@ def train_models():
     global DF, MODEL_STATE
     try:
         print("AI ENGINE: Loading Data Foundation...")
-        
         if not os.path.exists(DATA_FILE):
-            print(f"WARNING: Data file {DATA_FILE} not found. Server will run without AI models.")
-            return
+    print("No dataset found. Generating synthetic data...")
+
+    states_list = ["Maharashtra", "Karnataka", "Punjab", "Bihar", "Tamil Nadu", "Gujarat"]
+    domains = ["Technology", "Agriculture", "Business"]
+
+    DF = pd.DataFrame({
+        'creation_output': np.random.randint(20, 90, 1000),
+        'learning_behavior': np.random.randint(20, 90, 1000),
+        'experience_consistency': np.random.randint(20, 90, 1000),
+        'economic_activity': np.random.randint(20, 90, 1000),
+        'innovation_problem_solving': np.random.randint(20, 90, 1000),
+        'collaboration_community': np.random.randint(20, 90, 1000),
+        'offline_capability': np.random.randint(20, 90, 1000),
+        'digital_presence': np.random.randint(20, 90, 1000),
+        'learning_hours': np.random.randint(1, 40, 1000),
+        'projects': np.random.randint(0, 10, 1000),
+        'state': np.random.choice(states_list, 1000),
+        'digital_access': np.random.choice(["High", "Regular", "Limited"], 1000),
+        'opportunity_level': np.random.choice(["High", "Moderate", "Low"], 1000),
+        'domain': np.random.choice(domains, 1000),
+        'area_type': np.random.choice(["Urban", "Rural"], 1000),
+        'skill_score': np.random.randint(30, 95, 1000)
+    })
+
+    globals()['DF'] = DF
+    print("Synthetic dataset created:", len(DF))
+
 
         DF = pd.read_csv(DATA_FILE)
         print(f"AI ENGINE: Loaded {len(DF)} profiles.")
@@ -490,4 +514,5 @@ def regional_analysis():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
 
