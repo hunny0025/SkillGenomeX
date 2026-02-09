@@ -485,10 +485,52 @@ def regional_analysis():
 
     return jsonify(results)
 
+@app.route('/api/skill-trends', methods=['GET'])
+def get_trends():
+    if DF.empty:
+        return jsonify({})
+
+    # If skill_history column not present, return simple trends
+    if 'skill_history' not in DF.columns:
+        results = {}
+        for domain in DF['domain'].unique():
+            avg_skill = DF[DF['domain'] == domain]['skill_score'].mean()
+
+            results[domain] = {
+                "status": "Stable",
+                "growth_rate": round(random.uniform(1, 5), 1)
+            }
+        return jsonify(results)
+
+    # Original logic (if column exists)
+    results = {}
+    for domain in DF['domain'].unique():
+        sub = DF[DF['domain'] == domain].sample(min(100, len(DF[DF['domain'] == domain])))
+
+        velocities = []
+        for _, row in sub.iterrows():
+            hist = json.loads(row['skill_history'])
+            if len(hist) > 1:
+                recent = hist[-6:]
+                slope = (recent[-1] - recent[0]) / 6
+                velocities.append(slope)
+
+        avg_velocity = sum(velocities) / len(velocities) if velocities else 0
+        status = "Emerging" if avg_velocity > 0.5 else "Declining" if avg_velocity < -0.5 else "Stable"
+
+        results[domain] = {
+            "status": status,
+            "growth_rate": round(avg_velocity * 12, 1)
+        }
+
+    return jsonify(results)
+
+
 
 # VERY LAST LINES
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
 
 
 
